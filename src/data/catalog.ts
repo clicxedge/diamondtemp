@@ -15,7 +15,11 @@ export type Product = {
 };
 
 const unitOf = (c: string) =>
-  ({ Earrings: "Earrings", Bracelets: "Bracelet", Pendants: "Pendant", Necklaces: "Necklace" } as Record<string, string>)[c] || "Ring";
+  ({
+    Earrings: "Earrings", Bracelets: "Bracelet", Pendants: "Pendant", Necklaces: "Necklace",
+    Bangles: "Bangle", Solitaires: "Solitaire", "Nose Pins": "Nose Pin", Anklets: "Anklet",
+    Chains: "Chain", Mangalsutra: "Mangalsutra", Gifting: "Gift Set",
+  } as Record<string, string>)[c] || "Ring";
 
 const rawProducts: [string, string, number, boolean?][] = [
   ["Solitaire Halo Ring", "Rings", 204500, true],
@@ -33,6 +37,20 @@ const rawProducts: [string, string, number, boolean?][] = [
   ["Riviera Line Bracelet", "Bracelets", 152000],
   ["Marquise Solitaire Pendant", "Pendants", 47800, true],
   ["Eternity Diamond Band", "Rings", 56300],
+  ["Solitaire Twin Ring", "Solitaires", 312000, true],
+  ["Classic Round Solitaire", "Solitaires", 268500],
+  ["Nested Diamond Bangle", "Bangles", 187400, true],
+  ["Everyday Slim Bangle", "Bangles", 96200],
+  ["Diamond Trio Nose Pin", "Nose Pins", 28900],
+  ["Screw Diamond Nose Pin", "Nose Pins", 21400, true],
+  ["Diamond Charm Anklet", "Anklets", 41800],
+  ["Twin Row Anklet", "Anklets", 53200, true],
+  ["Diamond Mangalsutra Chain", "Mangalsutra", 176500, true],
+  ["Classic Black Bead Mangalsutra", "Mangalsutra", 142300],
+  ["Diamond Rope Chain", "Chains", 68900],
+  ["Fine Diamond Link Chain", "Chains", 89400, true],
+  ["Festive Diamond Gift Set", "Gifting", 124600, true],
+  ["Everyday Sparkle Gift Box", "Gifting", 58700],
   ["Classic Diamond Studs II", "Earrings", 38900],
   ["Aurora Solitaire Necklace", "Necklaces", 210500, true],
 ];

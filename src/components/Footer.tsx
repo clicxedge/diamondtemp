@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Footer() {
+  const navigate = useNavigate();
   return (
     <footer className="bg-navy text-cream/70 px-4 md:px-8 pt-16 pb-10">
       <div className="max-w-[1400px] mx-auto grid grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10">
@@ -15,7 +18,7 @@ export default function Footer() {
           <div className="font-sans font-bold text-xs tracking-[0.14em] uppercase text-champagne mb-4">Shop</div>
           <div className="flex flex-col gap-2.5 font-sans text-sm">
             {["Rings", "Earrings", "Necklaces", "Solitaires"].map((l) => (
-              <span key={l} className="wd-underline cursor-pointer text-cream/70 w-fit">{l}</span>
+              <span key={l} onClick={() => navigate(`/shop?cat=${encodeURIComponent(l)}`)} className="wd-underline cursor-pointer text-cream/70 w-fit">{l}</span>
             ))}
           </div>
         </div>

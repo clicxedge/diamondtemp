@@ -9,11 +9,10 @@ export default function Shop() {
   const activeCat = params.get("cat");
   const [filterOpen, setFilterOpen] = useState(false);
 
-  const filtered = useMemo(
-    () => (activeCat ? products.filter((p) => p.cat.toLowerCase() === activeCat.toLowerCase() || p.cat === activeCat) : products),
+  const list = useMemo(
+    () => (activeCat ? products.filter((p) => p.cat.toLowerCase() === activeCat.toLowerCase()) : products),
     [activeCat],
   );
-  const list = filtered.length ? filtered : products;
 
   const FilterPanel = (
     <>
@@ -96,11 +95,21 @@ export default function Shop() {
       <div className="max-w-[1400px] mx-auto mt-6 px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 items-start">
         <aside className="hidden lg:block">{FilterPanel}</aside>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
-          {list.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        {list.length ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+            {list.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-20 text-center">
+            <p className="font-serif text-xl text-navy">No designs in {activeCat} yet</p>
+            <p className="mt-2 font-sans text-sm text-ink/60">New arrivals are added every week — check back soon.</p>
+            <span onClick={() => navigate("/shop")} className="inline-block mt-6 px-7 py-3 bg-navy text-white rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer">
+              Browse All Jewellery
+            </span>
+          </div>
+        )}
       </div>
 
       {filterOpen && (
