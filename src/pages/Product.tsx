@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { products, certs, thumbs } from "../data/catalog";
+import { products, certs, thumbs, getReviews } from "../data/catalog";
 import { useStore } from "../context/StoreContext";
 import { money } from "../lib/format";
 
@@ -16,6 +16,7 @@ export default function Product() {
 
   const product = products.find((p) => p.id === slug) ?? products[0];
   const wished = isWished(product.id);
+  const { reviews, average, count } = getReviews(product.id);
 
   return (
     <section className="bg-white pb-20">
@@ -68,6 +69,10 @@ export default function Product() {
         {/* Details */}
         <div>
           <h1 className="m-0 font-serif font-semibold text-[28px] md:text-[38px] text-navy leading-tight">{product.name}</h1>
+          <a href="#reviews" className="mt-2 flex items-center gap-2 w-fit">
+            <span className="text-gold text-sm tracking-widest">{"★".repeat(Math.round(average))}{"☆".repeat(5 - Math.round(average))}</span>
+            <span className="font-sans text-[13px] text-ink/60">{average} ({count} reviews)</span>
+          </a>
           <div className="mt-3.5 font-sans font-bold text-2xl md:text-[30px] text-ink">{money(product.price)}</div>
           <div className="font-sans text-xs text-ink/50 mt-0.5">MRP Incl. of all taxes</div>
 
@@ -151,6 +156,34 @@ export default function Product() {
           <div className="mt-6 text-center font-sans text-[13px] text-ink/60">
             Any questions? Reach us at <b className="text-navy">1800-419-0066</b>
           </div>
+        </div>
+      </div>
+
+      <div id="reviews" className="max-w-[1300px] mx-auto mt-16 px-4 md:px-8 pt-10 border-t border-navy/10">
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+          <div>
+            <h2 className="m-0 font-serif font-semibold text-2xl md:text-[32px] text-navy">Ratings & Reviews</h2>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-gold text-lg tracking-widest">{"★".repeat(Math.round(average))}{"☆".repeat(5 - Math.round(average))}</span>
+              <span className="font-sans font-semibold text-sm text-ink">{average} out of 5</span>
+              <span className="font-sans text-sm text-ink/50">({count} verified reviews)</span>
+            </div>
+          </div>
+          <button className="px-6 py-3 border border-navy text-navy rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-colors hover:bg-navy hover:text-white">
+            Write a Review
+          </button>
+        </div>
+        <div className="grid md:grid-cols-3 gap-5">
+          {reviews.map((r, i) => (
+            <div key={i} className="bg-cream-alt rounded-lg p-6 border border-navy/7">
+              <div className="text-gold text-sm tracking-widest">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</div>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-ink/80">{r.comment}</p>
+              <div className="mt-4 flex items-center justify-between font-sans text-xs text-ink/50">
+                <span className="font-semibold text-ink">{r.name}</span>
+                <span>{r.date}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

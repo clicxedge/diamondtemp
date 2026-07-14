@@ -75,3 +75,23 @@ export const metalFilters = ["White Gold (3228)", "Yellow Gold (2685)", "Rose Go
 export const occasionFilters = ["Everyday (2412)", "Bridal (1740)", "Gifting (1355)", "Office (988)"];
 export const certs = ["BIS", "SGL", "IGI", "GSI"];
 export const thumbs = [{ gem: true }, { video: true }, { video: true }, { gem: true }, { gem: true }];
+
+export type Review = { name: string; rating: number; date: string; comment: string };
+
+const reviewPool: Review[] = [
+  { name: "Ananya R.", rating: 5, date: "2 weeks ago", comment: "Absolutely stunning in person, the diamonds catch light beautifully. Delivery was quick too." },
+  { name: "Vikram S.", rating: 5, date: "1 month ago", comment: "Bought this for my wife's anniversary — she loves it. Great finish, feels premium." },
+  { name: "Meera K.", rating: 4, date: "1 month ago", comment: "Beautiful piece, exactly as shown. Sizing ran slightly small so double-check before ordering." },
+  { name: "Rohan D.", rating: 5, date: "2 months ago", comment: "Certified and came with proper documentation. Very happy with the purchase." },
+  { name: "Sanya P.", rating: 4, date: "3 months ago", comment: "Lovely design, lightweight for everyday wear. Packaging was excellent." },
+];
+
+export function getReviews(productId: string): { reviews: Review[]; average: number; count: number } {
+  let seed = 0;
+  for (let i = 0; i < productId.length; i++) seed += productId.charCodeAt(i);
+  const rotated = [...reviewPool.slice(seed % reviewPool.length), ...reviewPool.slice(0, seed % reviewPool.length)];
+  const reviews = rotated.slice(0, 3);
+  const count = 40 + (seed % 260);
+  const average = Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10;
+  return { reviews, average, count };
+}
