@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #12213f;
+  --color-navy-light: #2b3f6b;
+  --color-gold: #b8892f;
+  --color-champagne: #e6c98a;
+  --color-cream: #faf7f3;
+  --color-cream-alt: #f4f1ec;
+  --color-blush: #fdeff1;
+  --color-blush-alt: #fbe5e8;
+  --color-ink: #1a2338;
+  --color-rose: #c0455a;
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Jost", system-ui, sans-serif;
+}
+
+@keyframes wdTwinkle { 0%, 100% { opacity: .15; transform: scale(.5); } 50% { opacity: 1; transform: scale(1); } }
+@keyframes wdFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes wdSpin { to { transform: rotate(360deg); } }
+@keyframes wdMarquee { to { transform: translateX(-50%); } }
+@keyframes wdShine { 0% { background-position: -250% 0; } 100% { background-position: 250% 0; } }
+@keyframes wdPulse { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.12); opacity: .5; } }
+
+.wd-diamond { animation: wdSpin 24s linear infinite; }
+.wd-float { animation: wdFloat 6s ease-in-out infinite; }
+.wd-spark { animation: wdTwinkle 3.4s ease-in-out infinite; }
+.wd-marquee-track { animation: wdMarquee 26s linear infinite; }
+.wd-pulse-ring { animation: wdPulse 2.4s ease-out infinite; }
+
+.wd-shine {
+  background: linear-gradient(100deg, var(--color-navy) 0%, var(--color-navy) 42%, var(--color-gold) 50%, var(--color-navy) 58%, var(--color-navy) 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: wdShine 6s linear infinite;
+}
+
+.wd-underline { position: relative; }
+.wd-underline::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -5px;
+  height: 1.5px; width: 0;
+  background: var(--color-gold);
+  transition: width .35s ease;
+}
+.wd-underline:hover::after { width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wd-diamond, .wd-float, .wd-spark, .wd-marquee-track, .wd-pulse-ring, .wd-shine {
+    animation: none !important;
+  }
+}
+
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+a { color: var(--color-navy); text-decoration: none; }
+::selection { background: var(--color-blush-alt); color: var(--color-navy); }
+input::placeholder { color: rgb(26 35 56 / 0.4); }
+* { box-sizing: border-box; }
+
+/* Locomotive Scroll requires the smooth-scroll container to own page scroll */
+html.has-scroll-smooth { overflow: hidden; }
+html.has-scroll-dragging { user-select: none; }
+[data-scroll-container] { min-height: 100vh; }
