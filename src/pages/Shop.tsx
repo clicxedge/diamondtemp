@@ -1,52 +1,69 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import { products, priceFilters, metalFilters, colourFilters, categories } from "../data/catalog";
+import { products, priceFilterOptions, metalFilterOptions, colourFilterOptions, categories, type FilterOption } from "../data/catalog";
+import { useStore } from "../context/StoreContext";
+
+function FilterGroup({ title, options, active, onToggle }: { title: string; options: FilterOption[]; active: Set<string>; onToggle: (key: string) => void }) {
+  return (
+    <div className="border-t border-champagne/15 pt-5 first:border-t-0 first:pt-0">
+      <div className="font-sans font-bold text-[13px] text-champagne mb-3.5">{title}</div>
+      {options.map((f) => (
+        <label key={f.key} className="flex items-center gap-2.5 py-1.5 cursor-pointer font-sans text-[13px] text-cream/75">
+          <input
+            type="checkbox"
+            checked={active.has(f.key)}
+            onChange={() => onToggle(f.key)}
+            className="w-[15px] h-[15px] accent-gold flex-none"
+          />
+          {f.label}
+        </label>
+      ))}
+    </div>
+  );
+}
 
 export default function Shop() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const { notify } = useStore();
   const activeCat = params.get("cat");
+  const searchTerm = (params.get("search") || "").toLowerCase().trim();
   const [filterOpen, setFilterOpen] = useState(false);
+  const [price, setPrice] = useState<Set<string>>(new Set());
+  const [metal, setMetal] = useState<Set<string>>(new Set());
+  const [colour, setColour] = useState<Set<string>>(new Set());
 
-  const list = useMemo(
-    () => (activeCat ? products.filter((p) => p.cat.toLowerCase() === activeCat.toLowerCase()) : products),
-    [activeCat],
-  );
+  const toggle = (set: Set<string>, setter: (s: Set<string>) => void, key: string) => {
+    const next = new Set(set);
+    next.has(key) ? next.delete(key) : next.add(key);
+    setter(next);
+  };
+
+  const list = useMemo(() => {
+    let out = activeCat ? products.filter((p) => p.cat.toLowerCase() === activeCat.toLowerCase()) : products;
+    if (searchTerm) out = out.filter((p) => p.name.toLowerCase().includes(searchTerm) || p.cat.toLowerCase().includes(searchTerm));
+    if (price.size) out = out.filter((p) => priceFilterOptions.some((f) => price.has(f.key) && f.test(p)));
+    if (metal.size) out = out.filter((p) => metalFilterOptions.some((f) => metal.has(f.key) && f.test(p)));
+    if (colour.size) out = out.filter((p) => colourFilterOptions.some((f) => colour.has(f.key) && f.test(p)));
+    return out;
+  }, [activeCat, searchTerm, price, metal, colour]);
+
+  const anyActive = price.size > 0 || metal.size > 0 || colour.size > 0;
+  const clearAll = () => { setPrice(new Set()); setMetal(new Set()); setColour(new Set()); };
 
   const FilterPanel = (
     <>
-      <div className="bg-navy-light text-cream px-5 py-3.5 rounded-t-md font-sans font-bold text-[13px] tracking-[0.1em] uppercase">
+      <div className="bg-navy-light text-cream px-5 py-3.5 rounded-t-md font-sans font-bold text-[13px] tracking-[0.1em] uppercase flex items-center justify-between">
         Filters
+        {anyActive && (
+          <button onClick={clearAll} className="text-[10px] font-semibold text-gold normal-case tracking-normal">Clear</button>
+        )}
       </div>
       <div className="border border-champagne/15 border-t-0 rounded-b-md px-5 py-6 flex flex-col gap-6">
-        <div>
-          <div className="font-sans font-bold text-[13px] text-champagne mb-3.5">Price</div>
-          {priceFilters.map((f) => (
-            <label key={f} className="flex items-center gap-2.5 py-1.5 cursor-pointer font-sans text-[13px] text-cream/75">
-              <span className="w-[15px] h-[15px] border-[1.5px] border-champagne/35 rounded-[3px] flex-none" />
-              {f}
-            </label>
-          ))}
-        </div>
-        <div className="border-t border-champagne/15 pt-5">
-          <div className="font-sans font-bold text-[13px] text-champagne mb-3.5">Metal</div>
-          {metalFilters.map((f) => (
-            <label key={f} className="flex items-center gap-2.5 py-1.5 cursor-pointer font-sans text-[13px] text-cream/75">
-              <span className="w-[15px] h-[15px] border-[1.5px] border-champagne/35 rounded-[3px] flex-none" />
-              {f}
-            </label>
-          ))}
-        </div>
-        <div className="border-t border-champagne/15 pt-5">
-          <div className="font-sans font-bold text-[13px] text-champagne mb-3.5">Colour</div>
-          {colourFilters.map((f) => (
-            <label key={f} className="flex items-center gap-2.5 py-1.5 cursor-pointer font-sans text-[13px] text-cream/75">
-              <span className="w-[15px] h-[15px] border-[1.5px] border-champagne/35 rounded-[3px] flex-none" />
-              {f}
-            </label>
-          ))}
-        </div>
+        <FilterGroup title="Price" options={priceFilterOptions} active={price} onToggle={(k) => toggle(price, setPrice, k)} />
+        <FilterGroup title="Metal" options={metalFilterOptions} active={metal} onToggle={(k) => toggle(metal, setMetal, k)} />
+        <FilterGroup title="Colour" options={colourFilterOptions} active={colour} onToggle={(k) => toggle(colour, setColour, k)} />
       </div>
     </>
   );
@@ -62,16 +79,19 @@ export default function Shop() {
           <span className="font-serif text-xl md:text-3xl font-medium">Old is the new gold?</span>
           <span className="flex items-center gap-5">
             <span className="font-serif font-semibold text-lg md:text-2xl text-champagne text-right leading-tight">Big Gold<br />Upgrade</span>
-            <span className="px-5 py-3 border border-champagne text-champagne rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-all hover:bg-champagne hover:text-navy">
+            <button
+              onClick={() => notify("10+1 Gold Plan — coming soon")}
+              className="px-5 py-3 border border-champagne text-champagne rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-all hover:bg-champagne hover:text-navy"
+            >
               Try Now
-            </span>
+            </button>
           </span>
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto mt-6 px-4 md:px-8 flex items-baseline gap-4">
+      <div className="max-w-[1400px] mx-auto mt-6 px-4 md:px-8 flex items-baseline gap-4 flex-wrap">
         <h1 className="m-0 font-serif font-semibold text-2xl md:text-[34px] text-gold tracking-wide">
-          {activeCat || "Jewellery"}
+          {searchTerm ? `Search: "${searchTerm}"` : activeCat || "Jewellery"}
         </h1>
         <span className="w-px h-5 bg-champagne/20 self-center" />
         <span className="font-sans text-sm text-cream/55">{list.length} Designs</span>
@@ -80,14 +100,19 @@ export default function Shop() {
       <div className="max-w-[1400px] mx-auto mt-4 px-4 md:px-8">
         <div className="bg-navy-light rounded-lg px-5 py-3.5 flex items-center justify-between gap-4 flex-wrap">
           <div className="flex gap-2.5">
-            <span className="px-5 py-2 bg-gold text-navy rounded font-sans font-bold text-[11px] tracking-[0.08em] uppercase cursor-pointer">All</span>
+            <span
+              onClick={() => { navigate(activeCat ? "/shop" : "/shop"); clearAll(); }}
+              className="px-5 py-2 bg-gold text-navy rounded font-sans font-bold text-[11px] tracking-[0.08em] uppercase cursor-pointer"
+            >
+              All
+            </span>
             <button onClick={() => setFilterOpen(true)} className="lg:hidden px-5 py-2 bg-navy border border-champagne/20 rounded font-sans font-bold text-[11px] tracking-[0.08em] uppercase text-cream">
               Filters
             </button>
           </div>
           <div className="flex gap-2.5 items-center">
-            <span className="px-4 py-2 border border-gold text-gold rounded font-sans font-bold text-[11px] tracking-[0.06em] cursor-pointer">⌖ Pincode</span>
-            <span className="px-4 py-2 border border-champagne/25 rounded font-sans font-semibold text-xs text-cream cursor-pointer">Popular ▾</span>
+            <button onClick={() => notify("Pincode delivery check — coming soon")} className="px-4 py-2 border border-gold text-gold rounded font-sans font-bold text-[11px] tracking-[0.06em] cursor-pointer">⌖ Pincode</button>
+            <button onClick={() => notify("Sort — coming soon")} className="px-4 py-2 border border-champagne/25 rounded font-sans font-semibold text-xs text-cream cursor-pointer">Popular ▾</button>
           </div>
         </div>
       </div>
@@ -103,9 +128,9 @@ export default function Shop() {
           </div>
         ) : (
           <div className="py-20 text-center">
-            <p className="font-serif text-xl text-champagne">No designs in {activeCat} yet</p>
-            <p className="mt-2 font-sans text-sm text-cream/60">New arrivals are added every week — check back soon.</p>
-            <span onClick={() => navigate("/shop")} className="inline-block mt-6 px-7 py-3 bg-gold text-navy rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer">
+            <p className="font-serif text-xl text-champagne">No designs match these filters</p>
+            <p className="mt-2 font-sans text-sm text-cream/60">Try clearing a filter or browse everything instead.</p>
+            <span onClick={() => { clearAll(); navigate("/shop"); }} className="inline-block mt-6 px-7 py-3 bg-gold text-navy rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer">
               Browse All Jewellery
             </span>
           </div>

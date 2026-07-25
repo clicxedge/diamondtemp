@@ -10,7 +10,7 @@ const sizes = ["8", "10", "12", "14", "16", "18"];
 export default function Product() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { addToCart, toggleWish, isWished } = useStore();
+  const { addToCart, toggleWish, isWished, notify } = useStore();
   const [size, setSize] = useState<string | null>(null);
   const [sizeOpen, setSizeOpen] = useState(false);
   const [pincode, setPincode] = useState("");
@@ -80,12 +80,12 @@ export default function Product() {
             <div className="flex items-center gap-3">
               <span className="w-6.5 h-6.5 rounded-full bg-blush text-rose flex items-center justify-center text-[13px] flex-none">%</span>
               <span className="font-sans text-sm text-cream">
-                50% off on Making Charges: Use <b className="text-champagne">ALLURE50</b> <a className="text-gold cursor-pointer">T&C</a>
+                50% off on Making Charges: Use <b className="text-champagne">ALLURE50</b> <a onClick={() => notify("ALLURE50 — 50% off making charges applied at checkout")} className="text-gold cursor-pointer">T&C</a>
               </span>
             </div>
             <div className="flex items-center gap-3">
               <span className="w-6.5 h-6.5 rounded-full bg-cream-alt text-champagne flex items-center justify-center text-[13px] flex-none">▶</span>
-              <span className="font-sans text-sm text-cream">Schedule video call <a className="text-gold cursor-pointer">Book Now</a></span>
+              <span className="font-sans text-sm text-cream">Schedule video call <a onClick={() => notify("Video consult booking — coming soon")} className="text-gold cursor-pointer">Book Now</a></span>
             </div>
           </div>
 
@@ -99,17 +99,25 @@ export default function Product() {
                 placeholder="Pincode"
                 className="flex-1 bg-navy border border-champagne/20 rounded px-3 py-2 outline-none font-sans text-[13px] text-cream min-w-0"
               />
-              <span className="px-4 py-2 bg-gold text-navy rounded font-sans font-bold text-[11px] tracking-[0.06em] uppercase cursor-pointer">Update</span>
+              <button
+                onClick={() => notify(pincode.trim() ? `Delivery to ${pincode.trim()}: 3-5 business days` : "Enter a pincode first")}
+                className="px-4 py-2 bg-gold text-navy rounded font-sans font-bold text-[11px] tracking-[0.06em] uppercase cursor-pointer"
+              >
+                Update
+              </button>
             </div>
             <div className="mt-2.5 font-sans text-[13px] text-cream/60">Provide pincode for delivery date & nearby stores.</div>
           </div>
 
           <div className="mt-5 font-sans font-medium text-[15px] text-cream leading-relaxed">{product.desc}</div>
 
-          <div className="mt-5 border-y border-champagne/15 py-4 flex items-center justify-between cursor-pointer">
+          <button
+            onClick={() => notify("Custom design requests — coming soon")}
+            className="w-full mt-5 border-y border-champagne/15 py-4 flex items-center justify-between cursor-pointer text-left"
+          >
             <span className="font-sans font-semibold text-[15px] text-cream">Customize this design</span>
             <span className="text-xl text-gold">+</span>
-          </div>
+          </button>
 
           <div className="mt-6 flex items-center gap-4 flex-wrap relative">
             <span className="font-sans font-semibold text-sm text-cream">Size</span>
@@ -132,7 +140,7 @@ export default function Product() {
                 ))}
               </div>
             )}
-            <a className="text-gold font-sans text-[13px] cursor-pointer">Not sure about the size?</a>
+            <a onClick={() => notify("Size guide — coming soon")} className="text-gold font-sans text-[13px] cursor-pointer">Not sure about the size?</a>
           </div>
 
           <div className="mt-6 grid grid-cols-2 gap-4">
@@ -142,7 +150,10 @@ export default function Product() {
             >
               Buy Now
             </button>
-            <button className="py-4 bg-navy text-gold border border-gold rounded font-sans font-bold text-[13px] tracking-[0.1em] uppercase cursor-pointer transition-colors hover:bg-blush">
+            <button
+              onClick={() => notify("10 + 1 Monthly Plan — coming soon")}
+              className="py-4 bg-navy text-gold border border-gold rounded font-sans font-bold text-[13px] tracking-[0.1em] uppercase cursor-pointer transition-colors hover:bg-blush"
+            >
               10 + 1 Monthly Plan
             </button>
           </div>
@@ -177,7 +188,10 @@ export default function Product() {
               <span className="font-sans text-sm text-cream/50">({count} verified reviews)</span>
             </div>
           </div>
-          <button className="px-6 py-3 border border-champagne text-champagne rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-colors hover:bg-champagne hover:text-navy">
+          <button
+            onClick={() => notify("Review form — coming soon")}
+            className="px-6 py-3 border border-champagne text-champagne rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-colors hover:bg-champagne hover:text-navy"
+          >
             Write a Review
           </button>
         </div>

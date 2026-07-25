@@ -19,6 +19,7 @@ type StoreContextValue = {
   toggleWish: (p: Product) => void;
   isWished: (id: string) => boolean;
   toast: string;
+  notify: (msg: string) => void;
 };
 
 const StoreContext = createContext<StoreContextValue | null>(null);
@@ -108,6 +109,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     cart, cartCount, cartTotal, cartOpen, setCartOpen,
     addToCart, removeFromCart, setQty,
     wish, wishCount, toggleWish, isWished, toast,
+    notify: fireToast,
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

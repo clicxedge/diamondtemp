@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Reveal from "../components/Reveal";
 import ProductCard from "../components/ProductCard";
 import { categories, collections, testimonials, products } from "../data/catalog";
+import { useStore } from "../context/StoreContext";
 
 const trustBar = [
   { title: "BIS Hallmarked", sub: "Pure & Authentic Gold" },
@@ -14,14 +15,13 @@ const trustBar = [
 function Hero() {
   const navigate = useNavigate();
   return (
-    <section id="top" className="relative w-full min-h-screen overflow-hidden bg-navy flex flex-col">
+    <section id="top" className="relative w-full min-h-screen overflow-hidden bg-black flex flex-col">
       <img
-        src="/hero-model.jpg"
+        src="/hero-model.png"
         alt=""
-        className="absolute right-0 top-0 h-full w-auto max-w-[62%] object-cover object-[85%_center] opacity-90"
+        className="absolute right-0 top-0 h-full w-auto max-w-[65%] object-cover object-[70%_center]"
       />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#0d0a07 30%,rgba(13,10,7,.55) 55%,rgba(13,10,7,.1) 78%,transparent)" }} />
-      <div className="absolute -top-24 -right-16 w-[520px] h-[520px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle,rgba(201,162,75,.16),transparent 65%)" }} />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#000 32%,rgba(0,0,0,.6) 52%,rgba(0,0,0,.15) 72%,transparent)" }} />
 
       <div className="relative z-10 flex-1 flex flex-col justify-center px-6 md:px-14 py-10 max-w-[760px]">
         <h1
@@ -158,10 +158,17 @@ function Bestsellers() {
 }
 
 function VideoFeature() {
+  const navigate = useNavigate();
+  const { notify } = useStore();
   return (
     <section className="bg-[#080705] py-16 md:py-20 px-4 md:px-8">
       <div className="max-w-[1180px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
-        <Reveal className="relative aspect-video rounded-xl overflow-hidden border border-champagne/30 bg-navy-light cursor-pointer" delay={0}>
+        <Reveal
+          as="button"
+          onClick={() => notify("Campaign video — coming soon")}
+          className="relative aspect-video rounded-xl overflow-hidden border border-champagne/30 bg-navy-light cursor-pointer w-full"
+          delay={0}
+        >
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-[70px] h-[70px] rounded-full bg-gold/90 flex items-center justify-center relative">
               <span className="wd-pulse-ring absolute -inset-2.5 rounded-full border-2 border-gold/60" />
@@ -177,9 +184,13 @@ function VideoFeature() {
           <p className="mt-4.5 mb-6 font-sans text-base leading-loose text-cream/70 max-w-[440px]">
             Every JKP piece begins with a single certified stone and the hands of a master karigar. Watch the making of our signature collection.
           </p>
-          <span className="inline-block px-9 py-3.5 rounded font-sans font-bold text-xs tracking-[0.1em] uppercase text-navy cursor-pointer" style={{ background: "linear-gradient(135deg,#f6e5a8,#c9a24b 45%,#a9822b)" }}>
+          <button
+            onClick={() => navigate("/shop")}
+            className="inline-block px-9 py-3.5 rounded font-sans font-bold text-xs tracking-[0.1em] uppercase text-navy cursor-pointer"
+            style={{ background: "linear-gradient(135deg,#f6e5a8,#c9a24b 45%,#a9822b)" }}
+          >
             Watch &amp; Shop
-          </span>
+          </button>
         </Reveal>
       </div>
     </section>
@@ -187,6 +198,7 @@ function VideoFeature() {
 }
 
 function StoreLocator() {
+  const { notify } = useStore();
   return (
     <section className="py-16 md:py-20 px-4 md:px-8 relative overflow-hidden" style={{ background: "linear-gradient(135deg,#f6e5a8,#c9a24b 45%,#a9822b)" }}>
       <Reveal as="div" className="relative max-w-[1180px] mx-auto grid md:grid-cols-2 gap-10 items-center">
@@ -205,9 +217,12 @@ function StoreLocator() {
             120+ Stores Nationwide
           </div>
           <div>
-            <span className="inline-block px-9 py-3.5 bg-navy text-champagne rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-colors hover:bg-navy-light">
+            <button
+              onClick={() => notify("Store locator — coming soon")}
+              className="inline-block px-9 py-3.5 bg-navy text-champagne rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-colors hover:bg-navy-light"
+            >
               Find your nearest store
-            </span>
+            </button>
           </div>
         </div>
       </Reveal>

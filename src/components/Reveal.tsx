@@ -9,11 +9,13 @@ export default function Reveal({
   as: Tag = "div",
   className = "",
   delay = 0,
+  ...rest
 }: {
   children: ReactNode;
   as?: ElementType;
   className?: string;
   delay?: number;
+  [key: string]: unknown;
 }) {
   const ref = useRef<HTMLElement | null>(null);
 
@@ -34,7 +36,7 @@ export default function Reveal({
   }, [delay]);
 
   return (
-    <Tag ref={ref} className={className}>
+    <Tag ref={ref} className={className} {...rest}>
       {children}
     </Tag>
   );
