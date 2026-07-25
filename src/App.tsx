@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import CartDrawer from "./components/CartDrawer";
 import Toast from "./components/Toast";
+import WhatsAppBadge from "./components/WhatsAppBadge";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Product from "./pages/Product";
@@ -35,6 +36,7 @@ function App() {
           <Footer />
           <CartDrawer />
           <Toast />
+          <WhatsAppBadge />
         </SmoothScroll>
       </StoreProvider>
     </BrowserRouter>

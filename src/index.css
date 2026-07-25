@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #12213f;
-  --color-navy-light: #2b3f6b;
-  --color-gold: #b8892f;
-  --color-champagne: #e6c98a;
-  --color-cream: #faf7f3;
-  --color-cream-alt: #f4f1ec;
-  --color-blush: #fdeff1;
-  --color-blush-alt: #fbe5e8;
-  --color-ink: #1a2338;
-  --color-rose: #c0455a;
+  --color-navy: #0d0a07;
+  --color-navy-light: #1c1712;
+  --color-gold: #c9a24b;
+  --color-champagne: #e6c56f;
+  --color-cream: #f5efe0;
+  --color-cream-alt: #17130e;
+  --color-blush: #1c1712;
+  --color-blush-alt: #221a12;
+  --color-ink: #f4ecd8;
+  --color-rose: #e2495f;
 
   --font-serif: "Playfair Display", Georgia, serif;
-  --font-sans: "Jost", system-ui, sans-serif;
+  --font-sans: "Mulish", system-ui, sans-serif;
+  --font-script: "Pinyon Script", cursive;
 }
 
 @keyframes wdTwinkle { 0%, 100% { opacity: .15; transform: scale(.5); } 50% { opacity: 1; transform: scale(1); } }

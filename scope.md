@@ -1,84 +1,77 @@
-# scope.md — White Diamond (project: diamondtemp)
+# scope.md — JKP Jewellers (project: diamondtemp)
 
-Derived from the user's build request 2026-07-14 + the supplied Claude Design export
-(`White Diamond Jewelry Site.zip`, contains `White Diamond.dc.html` — the authoritative
-design source) + bluestone.com as the live-site design reference for anything the export
-leaves ambiguous. Owner: Rounak (via ClicxEdge identity). Developer: Vedant.
+## Rebrand phase — 2026-07-26
+Full overwrite of the previous "White Diamond" build with a new design/content system
+supplied by the user: `JKP-Jewellers.html` (a Claude Design bundled export — black/gold
+luxury jewellery aesthetic), a 150-row dummy product catalog
+(`150_Dummy_Jewellery_Products_Category_Wise.xlsx`), and two reference photos of a
+gold-jewellery model used as the hero image. Owner: Rounak (via ClicxEdge identity).
+Developer: Vedant. Same repo/deploy target as before (`diamondtemp` → ClicxEdge) — only
+brand, design, and catalog changed, not infrastructure.
 
 ## What this is
-A frontend-only (no real backend/payments yet) Indian diamond-jewellery ecommerce site,
-design-and-UX-first, exact-match to the supplied export, with a working client-side cart.
-Dummy product data only — no real Shopify/DB integration this phase.
+A frontend-only (no real backend/payments) Indian jewellery ecommerce site under the
+"JKP Jewellers" brand, headless-storefront-style data layer (product/category objects
+decoupled from UI, Shopify-like shape) with dummy catalog data only — no real Shopify
+backend integration was created or requested to be created this phase.
 
 ## Stack
-- React + Vite + TypeScript, react-router-dom (SPA, not Next.js — no SSR need at this
-  phase, matches the established trial stack from TRS Musical / KB Legal).
-- Tailwind CSS for layout/utility, CSS custom properties for the export's exact palette.
-- Animation: framer-motion (micro-interactions, page transitions), GSAP + ScrollTrigger
-  (scroll reveals, pinned horizontal lookbook scroller — ported directly from the
-  export's own `_initGsap` logic), Locomotive Scroll (smooth-scroll container, wired to
-  ScrollTrigger via `scrollerProxy` so pinning/scrub still works).
+- React + Vite + TypeScript, react-router-dom (SPA).
+- Tailwind CSS v4 (`@theme` tokens) for the exact JKP black/gold palette.
+- Animation: framer-motion (drawers/menus), GSAP + ScrollTrigger (`Reveal` scroll-ins),
+  Locomotive Scroll v5/Lenis (smooth scroll).
 
-## Design system (from the export, do not deviate)
-- Colors: navy `#12213f` (header/footer/dark sections), gold `#b8892f` (accent/CTA),
-  cream `#faf7f3` (page bg), blush `#fdeff1` (soft section bg), ink text `#1a2338`,
-  champagne `#e6c98a` (on-dark accent).
-- Fonts: Playfair Display (headings, serif, incl. italic accents), Jost (body/UI, sans).
-- No neon/cyberpunk/space/glass-overload/dark-mode-default — export is already
-  professional cream+navy+gold, matches constitution's design rules natively.
+## Design system (from JKP-Jewellers.html export, do not deviate)
+- Full dark theme site-wide (confirmed from the export's own Home/Shop/Product markup,
+  all sections use near-black backgrounds — this is the deliberate JKP brand identity,
+  not a generic dark-mode default).
+- Colors: near-black `#0d0a07`/`#17130e` (bg/panels), gold `#c9a24b`, champagne
+  `#e6c56f` (accents/headings), cream `#f5efe0`/`#f4ecd8` (body text), rose `#e2495f`
+  (wishlist/deal accent).
+- Fonts: Playfair Display (headings), Pinyon Script (hero display headline), Mulish
+  (body/UI sans).
 
 ## Pages / routes
-- `/` — Home: announcement marquee, sticky header w/ mega-menu, hero, category rail,
-  promo strip (10+1 gold plan), collections (Nocturne/Lumen/Ether), bestsellers grid,
-  video-feature + #WornInLight campaign, pinned horizontal lookbook scroller, design-led
-  showcase, store-locator strip, testimonials, footer w/ newsletter.
-- `/shop` (or `/shop/:category`) — breadcrumb, promo banner, filter sidebar (price/metal/
-  occasion), responsive product grid, pincode + sort controls.
-- `/product/:slug` — sticky gallery + thumbnails (incl. video thumbnail slots), price,
-  making-charges offer, video-consult CTA, pincode check, size selector, buy-now / cart /
-  10+1 plan buttons, returns/exchange/certified trust row, certs (BIS/SGL/IGI/GSI).
+- `/` — Hero (script headline "Where Every Jewel Tells a Story", hero model photo,
+  5-badge trust bar), Shop by Category (10 tiles), Browse Latest Collections (3),
+  Bestsellers, Crafted-by-hand video feature, gold Store Locator band, Testimonials,
+  About Us.
+- `/shop?cat=` — promo banner, filter sidebar (Price / Metal / Colour — matches the
+  catalog's Material+Color columns), responsive product grid.
+- `/product/:slug` — gallery, price, size selector, buy-now/cart, certs row, reviews,
+  WhatsApp CTA in place of a fabricated phone number.
 
-## Nav
-Top utility bar (Stores / Wishlist / Bag / Account) + mega-menu category bar (All
-Jewellery ▾ dropdown listing all 12 categories, plus direct links: Rings, Earrings,
-Solitaires, Necklaces, Bracelets, Gifting, Offers). Every category in the dropdown
-routes to `/shop` filtered by that category. Mobile: hamburger → slide-in drawer with
-accordion category list.
+## Catalog (real data, not invented)
+150 SKUs generated from `150_Dummy_Jewellery_Products_Category_Wise.xlsx` — 10
+categories × 15 products (Rings, Earrings, Necklaces, Bracelets, Bangles, Anklets,
+Pendants, Brooches, Maang Tikka, Nose Pins), each with sku/name/material/color/price
+taken directly from the sheet. Placeholder image URLs in the sheet were replaced with
+real free-to-use Unsplash stock photos (2 per category, cycled across the 15 SKUs in
+that category) since the sheet's own `via.placeholder.com` links are not real photos.
 
 ## Cart / commerce
-- Client-side only: React Context + localStorage. Add-to-bag from grid cards and PDP,
-  quantity change/remove in a slide-in CartDrawer, running total.
-- Wishlist: same pattern, heart-toggle on every product card + PDP.
-- Currency: INR (`₹`), Indian digit grouping (`toLocaleString('en-IN')`). All export
-  dummy prices re-expressed in INR (export's own `shopRaw` array is already
-  INR-plausible, e.g. ₹91,686 — keep those; convert the smaller `rawProducts` USD-scale
-  set to equivalent INR).
-- No real checkout/payment gateway this phase — "Buy Now" adds to cart and opens the
-  drawer (clearly a placeholder, not a real payment flow).
+Unchanged from prior phase: client-side Context + localStorage cart and wishlist, INR
+pricing, no real checkout/payment gateway ("Buy Now" adds to cart, clearly a demo).
 
-## Data
-All dummy — 12 categories, ~9-12 products, 3 collections, 8 lookbook tiles, 3
-testimonials, price/metal/occasion filter facets — lifted and extended from the export's
-own `renderVals()` dataset. No fabricated real-brand claims; product names/specs are
-generic ("Diamond Ring in 18Kt White Gold... with Diamonds (0.34 Ct)") same as export.
+## WhatsApp integration (new this phase)
+Inline "Chat on WhatsApp" links (Product page contact line, Footer) + floating badge
+(all pages) per constitution rule 3. **`src/lib/whatsapp.ts` ships a placeholder phone
+number (`910000000000`) — this must be replaced with JKP Jewellers' real WhatsApp
+business number before going live.**
 
 ## Explicitly out of scope (this phase)
-- Real Shopify/Supabase backend, real payment gateway, real product photography (use the
-  export's own `diamond.png` + gradient/pattern placeholder tiles, same as the export
-  itself ships placeholders for photos/video).
-- User accounts / real auth.
-- WhatsApp integration (not requested for this project; constitution's WhatsApp rule
-  applies to lead-gen sites, not this ecommerce build — skip unless the user asks).
+- Real Shopify backend/Admin API integration (a connected Shopify MCP store exists for
+  a different project — TRS Musical — not this one; no new Shopify store was created).
+  "Headless Shopify format" was interpreted as a headless-storefront data-layer pattern,
+  not a live Shopify backend, consistent with the standing "dummy data only" decision.
+- Real payment gateway, user accounts/auth, real product photography.
 
 ## Deploy target
-- Vercel project `diamondtemp` → `diamondtemp.vercel.app`, under the **ClicxEdge**
-  identity (GitHub `clicxedge`, Vercel team `clic-xe-dge`) per the user's instruction to
-  use "clicxedge" identity for this new project.
-- Local prod build (`npm run build`) must pass clean before any deploy. Ask before the
-  actual `vercel --prod` push (standing deploy-discipline rule), even though the target
-  URL was already named by the user in the original request.
+Same as before: Vercel project `diamondtemp` → `diamondtemp.vercel.app`, ClicxEdge
+identity. Ask before any `vercel --prod` push.
 
 ## QA bar before calling a phase done
-Responsive at 360/768/1024/1440, no overlap/overflow, no console errors, cart/wishlist
-persist across reload, all nav dropdown links resolve, Lighthouse pass on perf/a11y/SEO
-basics for a client-rendered SPA.
+Responsive at 360/768/1024/1440 (verified via DOM assertions — no horizontal overflow,
+no broken images, zero console/page errors across Home/Shop/Product), all 10 category
+filters return their full 15 products, cart/wishlist persist across reload, WhatsApp
+links resolve to a valid `wa.me` URL, production build (`npm run build`) passes clean.

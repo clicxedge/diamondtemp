@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { waLink } from "../lib/whatsapp";
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -8,16 +9,16 @@ export default function Footer() {
         <div className="col-span-2 lg:col-span-1">
           <div className="flex items-center gap-3 mb-4">
             <span className="inline-block w-8 h-8 [clip-path:polygon(50%_0%,100%_35%,50%_100%,0%_35%)] bg-gradient-to-br from-champagne to-gold" />
-            <span className="font-serif font-semibold text-lg tracking-[0.24em] text-white">WHITE DIAMOND</span>
+            <span className="font-serif font-semibold text-lg tracking-[0.24em] text-white">JKP JEWELLERS</span>
           </div>
           <p className="font-sans font-light text-sm leading-relaxed max-w-[300px] text-cream/55">
-            Light, cut into forever. Certified natural diamonds, ethically sourced, crafted in recycled gold.
+            Crafting timeless elegance — pure gold and silver jewellery with assured quality and honest pricing.
           </p>
         </div>
         <div>
           <div className="font-sans font-bold text-xs tracking-[0.14em] uppercase text-champagne mb-4">Shop</div>
           <div className="flex flex-col gap-2.5 font-sans text-sm">
-            {["Rings", "Earrings", "Necklaces", "Solitaires"].map((l) => (
+            {["Rings", "Earrings", "Necklaces", "Bangles"].map((l) => (
               <span key={l} onClick={() => navigate(`/shop?cat=${encodeURIComponent(l)}`)} className="wd-underline cursor-pointer text-cream/70 w-fit">{l}</span>
             ))}
           </div>
@@ -28,6 +29,14 @@ export default function Footer() {
             {["Our Story", "Stores", "Sustainability", "Contact"].map((l) => (
               <span key={l} className="wd-underline cursor-pointer text-cream/70 w-fit">{l}</span>
             ))}
+            <a
+              href={waLink("Hi JKP Jewellers, I'd like to know more about your collection.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="wd-underline text-champagne w-fit"
+            >
+              Chat on WhatsApp
+            </a>
           </div>
         </div>
         <div className="col-span-2 lg:col-span-1">
@@ -46,7 +55,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="max-w-[1400px] mx-auto mt-11 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-3 font-sans text-xs text-cream/45">
-        <span>© 2026 White Diamond. All rights reserved.</span>
+        <span>© 2026 JKP Jewellers. All rights reserved.</span>
         <span>Privacy · Terms · Shipping</span>
       </div>
     </footer>
