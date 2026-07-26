@@ -62,7 +62,7 @@
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
-  background: var(--color-cream);
+  background: var(--color-navy);
   color: var(--color-ink);
   font-family: var(--font-sans);
   overflow-x: hidden;

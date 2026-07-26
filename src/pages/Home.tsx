@@ -24,18 +24,18 @@ function Hero() {
     <section id="top" className="relative w-full overflow-hidden bg-black flex flex-col lg:min-h-screen">
       {/* Mobile: image sits above the text in normal flow (never overlapped) */}
       <div className="lg:hidden relative w-full aspect-[4/5] overflow-hidden">
-        <img src="/hero-model.png" alt="" className="absolute inset-0 w-full h-full object-cover object-[68%_18%]" />
+        <img src="/hero-model-tight.png" alt="" className="absolute inset-0 w-full h-full object-cover object-[62%_16%]" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,#000 97%)" }} />
       </div>
 
       {/* Desktop: layered image + decorative fill for the mid-section gap */}
       <img
-        src="/hero-model.png"
+        src="/hero-model-tight.png"
         alt=""
-        className="hidden lg:block absolute right-0 top-0 h-full w-[50%] object-cover object-[68%_center]"
+        className="hidden lg:block absolute right-0 top-0 h-full w-[52%] object-cover object-[68%_center]"
       />
-      <div className="hidden lg:block absolute inset-0" style={{ background: "linear-gradient(90deg,#000 38%,rgba(0,0,0,.65) 54%,rgba(0,0,0,.2) 70%,transparent)" }} />
-      <div className="hidden lg:block absolute inset-y-0 left-[42%] right-[38%] pointer-events-none">
+      <div className="hidden lg:block absolute inset-0" style={{ background: "linear-gradient(90deg,#000 34%,rgba(0,0,0,.6) 48%,rgba(0,0,0,.18) 64%,transparent)" }} />
+      <div className="hidden lg:block absolute inset-y-0 left-[38%] right-[47%] pointer-events-none">
         <span className="wd-spark absolute top-[22%] left-[20%] w-1.5 h-1.5 rounded-full bg-gold" />
         <span className="wd-spark absolute top-[48%] left-[55%] w-1 h-1 rounded-full bg-champagne" style={{ animationDelay: "1.1s" }} />
         <span className="wd-spark absolute top-[68%] left-[30%] w-1 h-1 rounded-full bg-gold" style={{ animationDelay: "2s" }} />
@@ -132,7 +132,7 @@ function CategoryRail() {
               <motion.div
                 key={c.slug}
                 layout
-                transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => navigate(`/shop?cat=${encodeURIComponent(c.name)}`)}
                 className="cursor-pointer text-center bg-navy-light border border-champagne/25 rounded-xl p-3 transition-transform hover:-translate-y-1"
               >
@@ -260,6 +260,9 @@ function VideoFeature() {
           <video
             src="/videos/campaign.mp4"
             poster="/videos/campaign-poster.jpg"
+            autoPlay
+            muted
+            loop
             controls
             playsInline
             preload="metadata"
@@ -292,11 +295,16 @@ function StoreLocator() {
   return (
     <section className="py-16 md:py-20 px-4 md:px-8 relative overflow-hidden" style={{ background: "linear-gradient(135deg,#f6e5a8,#c9a24b 45%,#a9822b)" }}>
       <Reveal as="div" className="relative max-w-[1180px] mx-auto grid md:grid-cols-2 gap-10 items-center">
-        <div
-          className="aspect-[4/3] rounded-xl flex items-center justify-center font-mono text-[11px] shadow-lg"
-          style={{ background: "repeating-linear-gradient(135deg,#0c0b0a,#0c0b0a 16px,#171310 16px,#171310 32px)", color: "rgba(230,197,111,.5)" }}
-        >
-          boutique illustration
+        <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-lg border border-navy/20">
+          <video
+            src="/videos/lookbook-loop.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </div>
         <div className="text-center">
           <div className="font-sans font-bold text-xs tracking-[0.4em] uppercase text-navy/60 mb-3.5">Visit Us</div>
