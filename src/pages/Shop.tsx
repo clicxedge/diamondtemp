@@ -75,10 +75,10 @@ export default function Shop() {
       </div>
 
       <div className="max-w-[1400px] mx-auto mt-4 px-4 md:px-8">
-        <div className="rounded-lg overflow-hidden flex items-center justify-between px-6 md:px-12 py-6 md:py-0 md:h-[120px] text-cream gap-4 flex-wrap" style={{ background: "linear-gradient(90deg,#1a1510,#3a2c15)" }}>
+        <div className="rounded-lg overflow-hidden flex flex-col md:flex-row items-center justify-between text-center md:text-left px-6 md:px-12 py-6 md:py-0 md:h-[120px] text-cream gap-4 flex-wrap" style={{ background: "linear-gradient(90deg,#1a1510,#3a2c15)" }}>
           <span className="font-serif text-xl md:text-3xl font-medium">Old is the new gold?</span>
           <span className="flex items-center gap-5">
-            <span className="font-serif font-semibold text-lg md:text-2xl text-champagne text-right leading-tight">Big Gold<br />Upgrade</span>
+            <span className="font-serif font-semibold text-lg md:text-2xl text-champagne text-center md:text-right leading-tight">Big Gold<br />Upgrade</span>
             <button
               onClick={() => notify("10+1 Gold Plan — coming soon")}
               className="px-5 py-3 border border-champagne text-champagne rounded font-sans font-bold text-xs tracking-[0.1em] uppercase cursor-pointer transition-all hover:bg-champagne hover:text-navy"
@@ -89,8 +89,8 @@ export default function Shop() {
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto mt-6 px-4 md:px-8 flex items-baseline gap-4 flex-wrap">
-        <h1 className="m-0 font-serif font-semibold text-2xl md:text-[34px] text-gold tracking-wide">
+      <div className="max-w-[1400px] mx-auto mt-6 px-4 md:px-8 flex justify-center md:justify-start items-baseline gap-4 flex-wrap text-center md:text-left">
+        <h1 className="m-0 font-serif font-semibold text-2xl md:text-[34px] text-gold tracking-wide truncate max-w-full">
           {searchTerm ? `Search: "${searchTerm}"` : activeCat || "Jewellery"}
         </h1>
         <span className="w-px h-5 bg-champagne/20 self-center" />
@@ -98,8 +98,8 @@ export default function Shop() {
       </div>
 
       <div className="max-w-[1400px] mx-auto mt-4 px-4 md:px-8">
-        <div className="bg-navy-light rounded-lg px-5 py-3.5 flex items-center justify-between gap-4 flex-wrap">
-          <div className="flex gap-2.5">
+        <div className="bg-navy-light rounded-lg px-5 py-3.5 flex flex-col md:flex-row items-center md:justify-between gap-3 md:gap-4">
+          <div className="flex gap-2.5 justify-center flex-wrap">
             <span
               onClick={() => { navigate(activeCat ? "/shop" : "/shop"); clearAll(); }}
               className="px-5 py-2 bg-gold text-navy rounded font-sans font-bold text-[11px] tracking-[0.08em] uppercase cursor-pointer"
@@ -110,7 +110,7 @@ export default function Shop() {
               Filters
             </button>
           </div>
-          <div className="flex gap-2.5 items-center">
+          <div className="flex gap-2.5 items-center justify-center flex-wrap">
             <button onClick={() => notify("Pincode delivery check — coming soon")} className="px-4 py-2 border border-gold text-gold rounded font-sans font-bold text-[11px] tracking-[0.06em] cursor-pointer">⌖ Pincode</button>
             <button onClick={() => notify("Sort — coming soon")} className="px-4 py-2 border border-champagne/25 rounded font-sans font-semibold text-xs text-cream cursor-pointer">Popular ▾</button>
           </div>
@@ -150,9 +150,9 @@ export default function Shop() {
         </div>
       )}
 
-      <div className="max-w-[1400px] mx-auto mt-2 px-4 md:px-8 flex flex-wrap gap-2 lg:hidden">
+      <div className="max-w-[1400px] mx-auto mt-2 px-4 md:px-8 flex flex-wrap justify-center gap-2 lg:hidden">
         {categories.slice(0, 6).map((c) => (
-          <span key={c.slug} onClick={() => navigate(`/shop?cat=${encodeURIComponent(c.name)}`)} className="px-3 py-1.5 border border-champagne/25 rounded-full text-xs text-cream/70 cursor-pointer">
+          <span key={c.slug} onClick={() => navigate(`/shop?cat=${encodeURIComponent(c.name)}`)} className="px-3 py-1.5 border border-champagne/25 rounded-full text-xs text-cream/70 cursor-pointer whitespace-nowrap">
             {c.name}
           </span>
         ))}

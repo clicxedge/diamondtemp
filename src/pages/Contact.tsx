@@ -33,12 +33,12 @@ export default function Contact() {
       </div>
 
       <div className="max-w-[1100px] mx-auto px-4 md:px-8 pt-10 grid md:grid-cols-2 gap-12 items-start">
-        <Reveal>
+        <Reveal className="text-center md:text-left">
           <div className="font-sans font-bold text-xs tracking-[0.4em] uppercase text-gold mb-4">Get In Touch</div>
           <h1 className="m-0 font-serif font-semibold text-champagne" style={{ fontSize: "clamp(28px,4.5vw,46px)" }}>
             We'd Love to Hear From You
           </h1>
-          <div className="mt-8 flex flex-col gap-5 font-sans text-sm text-cream/80">
+          <div className="mt-8 flex flex-col items-center md:items-start gap-5 font-sans text-sm text-cream/80">
             <div>
               <div className="font-sans font-bold text-[11px] tracking-[0.14em] uppercase text-champagne mb-1.5">Visit</div>
               {CONTACT.address}

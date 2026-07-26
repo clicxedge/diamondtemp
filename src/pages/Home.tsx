@@ -1,8 +1,14 @@
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Reveal from "../components/Reveal";
 import ProductCard from "../components/ProductCard";
 import { categories, collections, testimonials, products } from "../data/catalog";
 import { useStore } from "../context/StoreContext";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const trustBar = [
   { title: "BIS Hallmarked", sub: "Pure & Authentic Gold" },
@@ -15,15 +21,29 @@ const trustBar = [
 function Hero() {
   const navigate = useNavigate();
   return (
-    <section id="top" className="relative w-full min-h-screen overflow-hidden bg-black flex flex-col">
+    <section id="top" className="relative w-full overflow-hidden bg-black flex flex-col lg:min-h-screen">
+      {/* Mobile: image sits above the text in normal flow (never overlapped) */}
+      <div className="lg:hidden relative w-full aspect-[4/5] overflow-hidden">
+        <img src="/hero-model.png" alt="" className="absolute inset-0 w-full h-full object-cover object-[68%_18%]" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,#000 97%)" }} />
+      </div>
+
+      {/* Desktop: layered image + decorative fill for the mid-section gap */}
       <img
         src="/hero-model.png"
         alt=""
-        className="absolute right-0 top-0 h-full w-auto max-w-[65%] object-cover object-[70%_center]"
+        className="hidden lg:block absolute right-0 top-0 h-full w-[50%] object-cover object-[68%_center]"
       />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,#000 32%,rgba(0,0,0,.6) 52%,rgba(0,0,0,.15) 72%,transparent)" }} />
+      <div className="hidden lg:block absolute inset-0" style={{ background: "linear-gradient(90deg,#000 38%,rgba(0,0,0,.65) 54%,rgba(0,0,0,.2) 70%,transparent)" }} />
+      <div className="hidden lg:block absolute inset-y-0 left-[42%] right-[38%] pointer-events-none">
+        <span className="wd-spark absolute top-[22%] left-[20%] w-1.5 h-1.5 rounded-full bg-gold" />
+        <span className="wd-spark absolute top-[48%] left-[55%] w-1 h-1 rounded-full bg-champagne" style={{ animationDelay: "1.1s" }} />
+        <span className="wd-spark absolute top-[68%] left-[30%] w-1 h-1 rounded-full bg-gold" style={{ animationDelay: "2s" }} />
+        <span className="wd-float absolute top-[38%] left-[42%] text-gold/40 text-2xl">✦</span>
+        <span className="wd-float absolute top-[62%] left-[15%] text-champagne/30 text-lg" style={{ animationDelay: "1.4s" }}>✦</span>
+      </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-center px-6 md:px-14 py-10 max-w-[760px]">
+      <div className="relative z-10 flex-1 flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-6 md:px-14 py-10 lg:max-w-[860px]">
         <h1
           className="m-0 leading-[0.9] text-champagne"
           style={{ fontFamily: "var(--font-script)", fontWeight: 400, fontSize: "clamp(52px,8.5vw,124px)", textShadow: "0 2px 30px rgba(201,162,75,.4)" }}
@@ -39,7 +59,7 @@ function Hero() {
         <p className="max-w-[430px] mt-6 font-sans text-base leading-relaxed text-cream/75">
           Discover handcrafted gold, diamond, silver, and bridal collections designed to celebrate life's most precious moments.
         </p>
-        <div className="flex gap-4 flex-wrap mt-9">
+        <div className="flex gap-4 flex-wrap mt-9 justify-center lg:justify-start">
           <button
             onClick={() => navigate("/shop")}
             className="inline-flex items-center gap-3 px-7 py-4 font-sans font-bold text-xs tracking-[0.14em] uppercase rounded-full text-navy transition-transform hover:-translate-y-0.5"
@@ -84,24 +104,43 @@ function SectionHeading({ children }: { children: string }) {
 
 function CategoryRail() {
   const navigate = useNavigate();
+  const [order, setOrder] = useState(() => categories.map((c) => c.slug));
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setOrder((prev) => {
+        const i = Math.floor(Math.random() * (prev.length - 1));
+        const next = [...prev];
+        [next[i], next[i + 1]] = [next[i + 1], next[i]];
+        return next;
+      });
+    }, 3200);
+    return () => clearInterval(id);
+  }, []);
+
+  const bySlug = new Map(categories.map((c) => [c.slug, c]));
+
   return (
     <section className="bg-[#0b0a08] py-16 md:py-20 px-4 md:px-8">
       <div className="max-w-[1240px] mx-auto">
         <SectionHeading>Shop by Category</SectionHeading>
         <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
-          {categories.map((c) => {
+          {order.map((slug) => {
+            const c = bySlug.get(slug)!;
             const sample = products.find((p) => p.cat === c.name);
             return (
-              <div
+              <motion.div
                 key={c.slug}
+                layout
+                transition={{ type: "spring", stiffness: 320, damping: 28 }}
                 onClick={() => navigate(`/shop?cat=${encodeURIComponent(c.name)}`)}
                 className="cursor-pointer text-center bg-navy-light border border-champagne/25 rounded-xl p-3 transition-transform hover:-translate-y-1"
               >
                 <div className="aspect-square rounded-lg overflow-hidden mb-3">
                   {sample && <img src={sample.image} alt="" className="w-full h-full object-cover" loading="lazy" />}
                 </div>
-                <div className="font-sans font-semibold text-[13px] text-cream">{c.name}</div>
-              </div>
+                <div className="font-sans font-semibold text-[13px] text-cream truncate">{c.name}</div>
+              </motion.div>
             );
           })}
         </div>
@@ -121,9 +160,9 @@ function Collections() {
             <Reveal key={col.name} as="div" className="relative h-[380px] md:h-[460px] rounded-xl overflow-hidden cursor-pointer border border-champagne/25" delay={0.05}>
               <div onClick={() => navigate("/shop")} className="absolute inset-0" style={{ background: col.bg }}>
                 <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 42%,rgba(0,0,0,.86))" }} />
-                <div className="absolute left-0 right-0 bottom-0 p-7">
+                <div className="absolute left-0 right-0 bottom-0 p-7 text-center md:text-left">
                   <div className="font-sans font-bold text-[11px] tracking-[0.3em] uppercase text-champagne mb-2.5">{col.kicker}</div>
-                  <h3 className="m-0 font-serif font-semibold text-3xl md:text-4xl text-cream">{col.name}</h3>
+                  <h3 className="m-0 font-serif font-semibold text-3xl md:text-4xl text-cream truncate">{col.name}</h3>
                   <p className="mt-2 mb-4 font-sans text-sm leading-relaxed text-cream/65">{col.desc}</p>
                   <span className="wd-underline font-sans font-bold text-xs tracking-[0.1em] uppercase text-champagne">Discover →</span>
                 </div>
@@ -131,6 +170,57 @@ function Collections() {
             </Reveal>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+function Lookbook() {
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const cards = track.querySelectorAll<HTMLElement>(".lookbook-card");
+    const ctx = gsap.context(() => {
+      gsap.from(cards, {
+        x: 110,
+        opacity: 0,
+        duration: 0.85,
+        ease: "power3.out",
+        stagger: 0.12,
+        scrollTrigger: { trigger: track, start: "top 88%" },
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
+  const tags = ["#WornInLight", "#OOTD", "#StyleInspo", "#StackItUp", "#BoldMoves", "#Heirloom", "#DateNight"];
+
+  return (
+    <section className="bg-[#0b0a08] py-16 md:py-20 overflow-hidden">
+      <div className="max-w-[1240px] mx-auto px-4 md:px-8">
+        <SectionHeading>Styled by You</SectionHeading>
+        <p className="text-center -mt-6 mb-9 font-sans text-sm text-cream/60">
+          Scroll to explore how our community wears JKP. Tag <span className="text-gold">#WornInLight</span>.
+        </p>
+      </div>
+      <div ref={trackRef} className="no-scrollbar flex gap-5 overflow-x-auto px-4 md:px-8 pb-3 snap-x snap-mandatory">
+        <div className="lookbook-card relative flex-none w-[68vw] sm:w-[290px] aspect-[3/4] rounded-xl overflow-hidden border border-champagne/25 snap-start">
+          <video src="/videos/lookbook-loop.mp4" autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,rgba(0,0,0,.88))" }} />
+          <span className="absolute left-4 bottom-4 font-sans font-bold text-sm text-champagne">{tags[0]}</span>
+        </div>
+        {tags.slice(1).map((tag, i) => {
+          const p = products[(i * 17 + 6) % products.length];
+          return (
+            <div key={tag} className="lookbook-card relative flex-none w-[68vw] sm:w-[290px] aspect-[3/4] rounded-xl overflow-hidden border border-champagne/25 snap-start">
+              <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,rgba(0,0,0,.88))" }} />
+              <span className="absolute left-4 bottom-4 font-sans font-bold text-sm text-champagne truncate max-w-[85%]">{tag}</span>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -159,29 +249,29 @@ function Bestsellers() {
 
 function VideoFeature() {
   const navigate = useNavigate();
-  const { notify } = useStore();
   return (
     <section className="bg-[#080705] py-16 md:py-20 px-4 md:px-8">
       <div className="max-w-[1180px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
         <Reveal
-          as="button"
-          onClick={() => notify("Campaign video — coming soon")}
-          className="relative aspect-video rounded-xl overflow-hidden border border-champagne/30 bg-navy-light cursor-pointer w-full"
+          as="div"
+          className="relative aspect-video rounded-xl overflow-hidden border border-champagne/30 bg-navy-light w-full"
           delay={0}
         >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-[70px] h-[70px] rounded-full bg-gold/90 flex items-center justify-center relative">
-              <span className="wd-pulse-ring absolute -inset-2.5 rounded-full border-2 border-gold/60" />
-              <span className="border-l-[18px] border-l-navy border-y-[11px] border-y-transparent ml-1" />
-            </div>
-          </div>
+          <video
+            src="/videos/campaign.mp4"
+            poster="/videos/campaign-poster.jpg"
+            controls
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </Reveal>
-        <Reveal delay={0.1}>
+        <Reveal delay={0.1} className="text-center lg:text-left">
           <div className="font-sans font-bold text-xs tracking-[0.34em] uppercase text-gold">The Campaign</div>
           <h2 className="mt-3.5 m-0 font-serif font-semibold text-cream leading-[1.1]" style={{ fontSize: "clamp(30px,4vw,50px)" }}>
             Crafted by hand,<br />worn for life
           </h2>
-          <p className="mt-4.5 mb-6 font-sans text-base leading-loose text-cream/70 max-w-[440px]">
+          <p className="mt-4.5 mb-6 font-sans text-base leading-loose text-cream/70 max-w-[440px] mx-auto lg:mx-0">
             Every JKP piece begins with a single certified stone and the hands of a master karigar. Watch the making of our signature collection.
           </p>
           <button
@@ -237,14 +327,14 @@ function Testimonials() {
         <SectionHeading>Loved by Our Clients</SectionHeading>
         <div className="grid md:grid-cols-3 gap-5">
           {testimonials.map((t) => (
-            <Reveal key={t.name} className="bg-navy-light rounded-xl p-7 border border-champagne/25" delay={0.05}>
+            <Reveal key={t.name} className="bg-navy-light rounded-xl p-7 border border-champagne/25 text-center md:text-left" delay={0.05}>
               <div className="text-gold text-xl mb-3">❝</div>
               <p className="my-0 mb-5 font-serif italic text-base leading-snug text-cream">{t.quote}</p>
-              <div className="flex items-center gap-3">
-                <span className="w-11 h-11 rounded-full border border-champagne/40" style={{ background: "linear-gradient(135deg,#2a2114,#1c1712)" }} />
-                <div>
-                  <div className="font-sans font-semibold text-sm text-cream">{t.name}</div>
-                  <div className="font-sans text-xs text-gold">{t.role}</div>
+              <div className="flex items-center justify-center md:justify-start gap-3">
+                <span className="w-11 h-11 flex-none rounded-full border border-champagne/40" style={{ background: "linear-gradient(135deg,#2a2114,#1c1712)" }} />
+                <div className="min-w-0">
+                  <div className="font-sans font-semibold text-sm text-cream truncate">{t.name}</div>
+                  <div className="font-sans text-xs text-gold truncate">{t.role}</div>
                 </div>
               </div>
             </Reveal>
@@ -276,6 +366,7 @@ export default function Home() {
       <Hero />
       <CategoryRail />
       <Collections />
+      <Lookbook />
       <Bestsellers />
       <VideoFeature />
       <StoreLocator />

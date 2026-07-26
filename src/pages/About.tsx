@@ -32,7 +32,7 @@ export default function About() {
 
       <div className="max-w-[1100px] mx-auto px-4 md:px-8 mt-16 grid sm:grid-cols-2 gap-6">
         {values.map((v) => (
-          <Reveal key={v.title} className="bg-navy-light border border-champagne/25 rounded-xl p-7" delay={0.05}>
+          <Reveal key={v.title} className="bg-navy-light border border-champagne/25 rounded-xl p-7 text-center sm:text-left" delay={0.05}>
             <div className="text-gold text-xl mb-3">✦</div>
             <h3 className="m-0 mb-2 font-serif font-semibold text-lg text-cream">{v.title}</h3>
             <p className="m-0 font-sans text-sm leading-relaxed text-cream/65">{v.desc}</p>

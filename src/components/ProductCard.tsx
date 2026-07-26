@@ -29,10 +29,10 @@ export default function ProductCard({ product }: { product: Product }) {
           {wished ? "♥" : "♡"}
         </button>
       </div>
-      <div className="p-4">
-        <div className="font-sans text-[9px] tracking-[0.18em] uppercase text-gold">{product.cat}</div>
-        <div className="mt-1.5 font-serif font-semibold text-lg text-champagne leading-tight">{product.name}</div>
-        <div className="font-sans font-semibold text-[15px] text-cream mt-0.5">{money(product.price)}</div>
+      <div className="p-4 text-center md:text-left">
+        <div className="font-sans text-[9px] tracking-[0.18em] uppercase text-gold truncate">{product.cat}</div>
+        <div className="mt-1.5 font-serif font-semibold text-lg text-champagne leading-tight truncate">{product.name}</div>
+        <div className="font-sans font-semibold text-[15px] text-cream mt-0.5 truncate">{money(product.price)}</div>
         <button
           onClick={(e) => { e.stopPropagation(); addToCart(product); }}
           className="mt-3.5 w-full py-3 bg-gold text-navy border-0 rounded font-sans font-bold text-[11px] tracking-[0.12em] uppercase cursor-pointer transition-colors hover:bg-champagne"
