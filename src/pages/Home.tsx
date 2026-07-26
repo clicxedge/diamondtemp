@@ -32,10 +32,10 @@ function Hero() {
       <img
         src="/hero-model-tight.png"
         alt=""
-        className="hidden lg:block absolute right-0 top-0 h-full w-[52%] object-cover object-[68%_center]"
+        className="hidden lg:block absolute right-0 top-0 h-full w-[57%] object-cover object-[56%_center]"
       />
-      <div className="hidden lg:block absolute inset-0" style={{ background: "linear-gradient(90deg,#000 34%,rgba(0,0,0,.6) 48%,rgba(0,0,0,.18) 64%,transparent)" }} />
-      <div className="hidden lg:block absolute inset-y-0 left-[38%] right-[47%] pointer-events-none">
+      <div className="hidden lg:block absolute inset-0" style={{ background: "linear-gradient(90deg,#000 30%,rgba(0,0,0,.6) 42%,rgba(0,0,0,.18) 56%,transparent)" }} />
+      <div className="hidden lg:block absolute inset-y-0 left-[34%] right-[57%] pointer-events-none">
         <span className="wd-spark absolute top-[22%] left-[20%] w-1.5 h-1.5 rounded-full bg-gold" />
         <span className="wd-spark absolute top-[48%] left-[55%] w-1 h-1 rounded-full bg-champagne" style={{ animationDelay: "1.1s" }} />
         <span className="wd-spark absolute top-[68%] left-[30%] w-1 h-1 rounded-full bg-gold" style={{ animationDelay: "2s" }} />

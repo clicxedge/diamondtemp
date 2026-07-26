@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { categories } from "../data/catalog";
@@ -22,14 +22,6 @@ export default function Navbar() {
   const { cartCount, setCartOpen, notify } = useStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const goShop = (cat?: string) => {
     setMobileOpen(false);
@@ -51,11 +43,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header
-        className={`sticky top-0 z-50 transition-colors duration-300 border-b ${
-          scrolled ? "bg-navy/85 backdrop-blur-md border-champagne/20" : "bg-transparent border-transparent"
-        }`}
-      >
+      <header className="sticky top-0 z-50 bg-navy border-b border-champagne/20">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-3.5 flex items-center gap-4 md:gap-8">
           <button
             className="lg:hidden flex-none text-champagne text-2xl leading-none"
