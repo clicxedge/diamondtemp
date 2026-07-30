@@ -1,6 +1,4 @@
-import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Reveal from "../components/Reveal";
@@ -32,10 +30,11 @@ function Hero() {
       <img
         src="/hero-model-tight.png"
         alt=""
-        className="hidden lg:block absolute right-0 top-0 h-full w-[57%] object-cover object-[56%_center]"
+        className="hidden lg:block absolute right-0 top-0 h-full w-[60%] object-cover object-center"
+        style={{ transform: "scale(1.25)", transformOrigin: "100% 50%" }}
       />
-      <div className="hidden lg:block absolute inset-0" style={{ background: "linear-gradient(90deg,#000 30%,rgba(0,0,0,.6) 42%,rgba(0,0,0,.18) 56%,transparent)" }} />
-      <div className="hidden lg:block absolute inset-y-0 left-[34%] right-[57%] pointer-events-none">
+      <div className="hidden lg:block absolute inset-0" style={{ background: "linear-gradient(90deg,#000 28%,rgba(0,0,0,.6) 36%,rgba(0,0,0,.18) 46%,transparent)" }} />
+      <div className="hidden lg:block absolute inset-y-0 left-[22%] right-[60%] pointer-events-none">
         <span className="wd-spark absolute top-[22%] left-[20%] w-1.5 h-1.5 rounded-full bg-gold" />
         <span className="wd-spark absolute top-[48%] left-[55%] w-1 h-1 rounded-full bg-champagne" style={{ animationDelay: "1.1s" }} />
         <span className="wd-spark absolute top-[68%] left-[30%] w-1 h-1 rounded-full bg-gold" style={{ animationDelay: "2s" }} />
@@ -43,7 +42,7 @@ function Hero() {
         <span className="wd-float absolute top-[62%] left-[15%] text-champagne/30 text-lg" style={{ animationDelay: "1.4s" }}>✦</span>
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-6 md:px-14 py-10 lg:max-w-[860px]">
+      <div className="relative z-10 flex-1 flex flex-col justify-center items-center lg:items-start text-center lg:text-left px-6 md:px-14 lg:pl-24 py-10 lg:max-w-[700px]">
         <h1
           className="m-0 leading-[0.9] text-champagne"
           style={{ fontFamily: "var(--font-script)", fontWeight: 400, fontSize: "clamp(52px,8.5vw,124px)", textShadow: "0 2px 30px rgba(201,162,75,.4)" }}
@@ -51,7 +50,7 @@ function Hero() {
           <span className="block">Where Every</span>
           <span className="block mt-1">Jewel Tells a Story</span>
         </h1>
-        <div className="flex items-center gap-3.5 mt-7">
+        <div className="flex items-center gap-3.5 mt-7 lg:ml-8">
           <span className="w-20 h-px" style={{ background: "linear-gradient(90deg,transparent,#c9a24b)" }} />
           <span className="text-gold text-xs">◆</span>
           <span className="w-20 h-px" style={{ background: "linear-gradient(90deg,#c9a24b,transparent)" }} />
@@ -104,43 +103,26 @@ function SectionHeading({ children }: { children: string }) {
 
 function CategoryRail() {
   const navigate = useNavigate();
-  const [order, setOrder] = useState(() => categories.map((c) => c.slug));
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setOrder((prev) => {
-        const i = Math.floor(Math.random() * (prev.length - 1));
-        const next = [...prev];
-        [next[i], next[i + 1]] = [next[i + 1], next[i]];
-        return next;
-      });
-    }, 3200);
-    return () => clearInterval(id);
-  }, []);
-
-  const bySlug = new Map(categories.map((c) => [c.slug, c]));
 
   return (
     <section className="bg-[#0b0a08] py-16 md:py-20 px-4 md:px-8">
       <div className="max-w-[1240px] mx-auto">
         <SectionHeading>Shop by Category</SectionHeading>
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
-          {order.map((slug) => {
-            const c = bySlug.get(slug)!;
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {categories.map((c, i) => {
             const sample = products.find((p) => p.cat === c.name);
             return (
-              <motion.div
+              <Reveal
                 key={c.slug}
-                layout
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                delay={(i % 5) * 0.06}
                 onClick={() => navigate(`/shop?cat=${encodeURIComponent(c.name)}`)}
-                className="cursor-pointer text-center bg-navy-light border border-champagne/25 rounded-xl p-3 transition-transform hover:-translate-y-1"
+                className="cursor-pointer text-center bg-navy-light border border-champagne/25 rounded-xl p-3 transition-transform duration-300 hover:-translate-y-1"
               >
                 <div className="aspect-square rounded-lg overflow-hidden mb-3">
                   {sample && <img src={sample.image} alt="" className="w-full h-full object-cover" loading="lazy" />}
                 </div>
                 <div className="font-sans font-semibold text-[13px] text-cream truncate">{c.name}</div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>
@@ -176,26 +158,27 @@ function Collections() {
 }
 
 function Lookbook() {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const cards = track.querySelectorAll<HTMLElement>(".lookbook-card");
-    const ctx = gsap.context(() => {
-      gsap.from(cards, {
-        x: 110,
-        opacity: 0,
-        duration: 0.85,
-        ease: "power3.out",
-        stagger: 0.12,
-        scrollTrigger: { trigger: track, start: "top 88%" },
-      });
-    });
-    return () => ctx.revert();
-  }, []);
-
   const tags = ["#WornInLight", "#OOTD", "#StyleInspo", "#StackItUp", "#BoldMoves", "#Heirloom", "#DateNight"];
+
+  const renderCard = (tag: string, i: number, dup: number) => {
+    if (i === 0) {
+      return (
+        <div key={`${tag}-${dup}`} className="relative flex-none w-[68vw] sm:w-[290px] aspect-[3/4] rounded-xl overflow-hidden border border-champagne/25">
+          <video src="/videos/lookbook-loop.mp4" autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,rgba(0,0,0,.88))" }} />
+          <span className="absolute left-4 bottom-4 font-sans font-bold text-sm text-champagne">{tag}</span>
+        </div>
+      );
+    }
+    const p = products[((i - 1) * 17 + 6) % products.length];
+    return (
+      <div key={`${tag}-${dup}`} className="relative flex-none w-[68vw] sm:w-[290px] aspect-[3/4] rounded-xl overflow-hidden border border-champagne/25">
+        <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,rgba(0,0,0,.88))" }} />
+        <span className="absolute left-4 bottom-4 font-sans font-bold text-sm text-champagne truncate max-w-[85%]">{tag}</span>
+      </div>
+    );
+  };
 
   return (
     <section className="bg-[#0b0a08] py-16 md:py-20 overflow-hidden">
@@ -205,22 +188,11 @@ function Lookbook() {
           Scroll to explore how our community wears JKP. Tag <span className="text-gold">#WornInLight</span>.
         </p>
       </div>
-      <div ref={trackRef} className="no-scrollbar flex gap-5 overflow-x-auto px-4 md:px-8 pb-3 snap-x snap-mandatory">
-        <div className="lookbook-card relative flex-none w-[68vw] sm:w-[290px] aspect-[3/4] rounded-xl overflow-hidden border border-champagne/25 snap-start">
-          <video src="/videos/lookbook-loop.mp4" autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,rgba(0,0,0,.88))" }} />
-          <span className="absolute left-4 bottom-4 font-sans font-bold text-sm text-champagne">{tags[0]}</span>
+      <div className="group relative overflow-hidden">
+        <div className="wd-marquee-track flex gap-5 w-max px-4 md:px-8 group-hover:[animation-play-state:paused]">
+          {tags.map((tag, i) => renderCard(tag, i, 0))}
+          {tags.map((tag, i) => renderCard(tag, i, 1))}
         </div>
-        {tags.slice(1).map((tag, i) => {
-          const p = products[(i * 17 + 6) % products.length];
-          return (
-            <div key={tag} className="lookbook-card relative flex-none w-[68vw] sm:w-[290px] aspect-[3/4] rounded-xl overflow-hidden border border-champagne/25 snap-start">
-              <img src={p.image} alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 55%,rgba(0,0,0,.88))" }} />
-              <span className="absolute left-4 bottom-4 font-sans font-bold text-sm text-champagne truncate max-w-[85%]">{tag}</span>
-            </div>
-          );
-        })}
       </div>
     </section>
   );
@@ -270,7 +242,7 @@ function VideoFeature() {
           />
         </Reveal>
         <Reveal delay={0.1} className="text-center lg:text-left">
-          <div className="font-sans font-bold text-xs tracking-[0.34em] uppercase text-gold">The Campaign</div>
+          <div className="font-sans font-bold text-sm md:text-base tracking-[0.3em] uppercase text-gold">The Campaign</div>
           <h2 className="mt-3.5 m-0 font-serif font-semibold text-cream leading-[1.1]" style={{ fontSize: "clamp(30px,4vw,50px)" }}>
             Crafted by hand,<br />worn for life
           </h2>
@@ -307,7 +279,7 @@ function StoreLocator() {
           />
         </div>
         <div className="text-center">
-          <div className="font-sans font-bold text-xs tracking-[0.4em] uppercase text-navy/60 mb-3.5">Visit Us</div>
+          <div className="font-sans font-bold text-sm md:text-base tracking-[0.35em] uppercase text-navy/60 mb-3.5">Visit Us</div>
           <h2 className="m-0 font-serif font-semibold text-navy leading-snug" style={{ fontSize: "clamp(26px,4vw,50px)" }}>
             A JKP boutique is<br />closer than you think
           </h2>
